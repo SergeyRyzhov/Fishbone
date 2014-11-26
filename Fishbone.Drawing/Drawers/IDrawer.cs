@@ -13,7 +13,7 @@ namespace Fishbone.Drawing.Drawers
     {
         public Graphics Draw(Matrix<int> matrix, string fileName)
         {
-            const int integerScale = 20;
+            const int integerScale = 1;
             const float scale = integerScale;
 
             var bmp = new Bitmap(matrix.Width * integerScale, matrix.Height * integerScale);
