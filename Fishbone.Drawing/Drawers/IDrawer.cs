@@ -1,6 +1,6 @@
-﻿using System.Drawing.Imaging;
-using Fishbone.Common.Model;
+﻿using Fishbone.Common.Model;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Fishbone.Drawing.Drawers
 {
@@ -13,10 +13,10 @@ namespace Fishbone.Drawing.Drawers
     {
         public Graphics Draw(Matrix<int> matrix, string fileName)
         {
-            int iscale = 20;
-            float scale = (float)iscale;
+            const int integerScale = 20;
+            const float scale = integerScale;
 
-            var bmp = new Bitmap(matrix.Width*iscale, matrix.Height*iscale);
+            var bmp = new Bitmap(matrix.Width * integerScale, matrix.Height * integerScale);
             var canvas = Graphics.FromImage(bmp);
             canvas.Clear(Color.White);
             for (int r = 0; r < matrix.Height; r++)
@@ -26,7 +26,7 @@ namespace Fishbone.Drawing.Drawers
                     if (matrix[r][c] > 0)
                     {
                         canvas.FillRectangle(Brushes.Gray, c * scale, r * scale, scale, scale);
-                        canvas.DrawRectangle(new Pen(Color.Black), c*scale, r*scale, scale, scale);
+                        canvas.DrawRectangle(new Pen(Color.Black), c * scale, r * scale, scale, scale);
                     }
                 }
             }
