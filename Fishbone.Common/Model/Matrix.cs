@@ -1,33 +1,93 @@
-﻿namespace Fishbone.Common.Model
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Fishbone.Common.Model
 {
-    public abstract class Matrix<T>
+    public interface IMatrix<out T>: IEnumerable<Cell>
     {
-        private readonly MatrixRow<T>[] m_rows;
+        T this[int row, int col] { get;}
 
-        protected Matrix(T[][] values)
+        int Cols { get; }
+
+        int Rows { get; }
+    }
+
+    public class Cell
+    {
+        public int Col;
+        public int Row;
+    }
+
+    public class CrsPortraitMatrix : IMatrix<int>
+    {
+        private readonly int[] m_rowIndex;
+        private readonly int[] m_colIndex;
+
+        public CrsPortraitMatrix(int cols, int rows, int nz)
         {
-            Height = values.Length;
-            Width = values[0].Length;
+            Cols = cols;
+            Rows = rows;
 
-            m_rows = new MatrixRow<T>[Height];
+            m_rowIndex = new int[rows + 1];
+            m_colIndex = new int[nz];
+        }
 
-            for (int i = 0; i < Height; i++)
+        public CrsPortraitMatrix(int rows, int cols, int[] rowIndex, int[] colIndex)
+        {
+            Rows = rows;
+            Cols = cols;
+            m_rowIndex = rowIndex;
+            m_colIndex = colIndex;
+        }
+
+        public int this[int row, int col]
+        {
+            get
             {
-                m_rows[i] = new MatrixRow<T>(values[i]);
+                try
+                {
+                    var @from = m_rowIndex[row];
+                    var @to = m_rowIndex[row + 1];
+
+                    var @symFrom = m_rowIndex[col];
+                    var @symTo = m_rowIndex[col + 1];
+                    return m_colIndex.Skip(@from).Take(@to - @from).Contains(col)
+                        ? 1
+                        : m_colIndex.Skip(@symFrom).Take(@symTo - @symFrom).Contains(row) ? 1 : 0;
+                }
+                catch (IndexOutOfRangeException exception)
+                {
+                    Console.WriteLine("Matrix are not symmetric");
+                    return 0;
+                }
             }
         }
 
-        public int Width { get; private set; }
-
-        public int Height { get; private set; }
-
-        public MatrixRow<T> this[int row]
+        public int Cols { get; private set; }
+        public int Rows { get; private set; }
+        public IEnumerator<Cell> GetEnumerator()
         {
-            get { return m_rows[row]; }
-            private set
+            for (int i = 0; i < Rows; i++)
             {
-                /* set the specified col to value here */
+                var row = m_rowIndex[i];
+                var nrow = m_rowIndex[i+1];
+
+                for (int j = row; j < nrow; j++)
+                {
+                    yield return new Cell
+                    {
+                        Row = i,
+                        Col = m_colIndex[j]
+                    };
+                }
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

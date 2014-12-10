@@ -4,6 +4,6 @@ namespace Fishbone.Parsing.Parsers
 {
     public interface IParser<T>
     {
-        Matrix<T> Parse(string fileName);
+        IMatrix<T> Parse(string fileName);
     }
 }

@@ -6,11 +6,17 @@ namespace Fishbone.Parsing.Parsers
 {
     public class MtxPortraitParser : IParser<int>
     {
-        public Matrix<int> Parse(string fileName)
+        public IMatrix<int> Parse(string fileName)
         {
-            int[][] mtx = null;
             int rows = 0;
             int cols = 0;
+            int[] rowIndexes = null;
+            int[] colIndexes = null;
+
+            int currentPosition = -1;
+            int currentRowPosition = 1;
+            int lastRow = 0;
+            int nz = 0;
 
             using (var file = new FileStream(fileName, FileMode.Open))
             {
@@ -31,32 +37,36 @@ namespace Fishbone.Parsing.Parsers
                         {
                             rows = int.Parse(parts[0]);
                             cols = int.Parse(parts[1]);
-
-                            mtx = new int[rows][];
-                            for (int i = 0; i < rows; i++)
-                            {
-                                mtx[i] = new int[cols];
-                            }
-
+                            nz = int.Parse(parts[2]);
+                            rowIndexes = new int[rows + 1];
+                            colIndexes = new int[nz];
                             first = false;
                         }
                         else
                         {
-                            var r = int.Parse(parts[0]) - 1;
-                            var c = int.Parse(parts[1]) - 1;
+                            var c = int.Parse(parts[0]) - 1;
+                            var r = int.Parse(parts[1]) - 1;
 
-                            mtx[r][c] = 1;
-                            if (rows == cols)
+                            colIndexes[++currentPosition] = c;
+
+                            if (lastRow == r)
                             {
-                                mtx[c][r] = 1;
+                            }
+                            else
+                            {
+                                lastRow = r;
+                                rowIndexes[currentRowPosition++] = currentPosition;
                             }
                         }
                         line = sr.ReadLine();
                     }
+
+
+                    rowIndexes[currentRowPosition++] = nz;
                 }
             }
 
-            var matrix = new IntMatrix(mtx);
+            var matrix = new CrsPortraitMatrix(cols, rows, rowIndexes, colIndexes);
             return matrix;
         }
     }
