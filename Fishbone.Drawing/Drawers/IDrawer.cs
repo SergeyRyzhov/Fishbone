@@ -49,13 +49,19 @@ namespace Fishbone.Drawing.Drawers
             return new Size((int)width, (int)height);
         }
 
+        protected static float GetScaling(float fieldWidth, float fieldHeight, float width, float height)
+        {
+            float scaling = fieldWidth / width < fieldHeight / height ? fieldWidth / width : fieldHeight / height;
+            return scaling;
+        }
+
         public Graphics Draw(IMatrix<int> matrix, string fileName)
         {
-            int integerScale = TestsConstants.Scale;
-            float scale = integerScale;
-
-
             Size adjustSize = AdjustSize(matrix);
+
+            float scale = 1 / GetScaling(matrix.Cols, matrix.Rows, adjustSize.Width, adjustSize.Height);
+            Console.WriteLine("Scale {0}", scale);
+            Console.WriteLine("Size {0}", adjustSize);
             var bmp = new Bitmap(adjustSize.Width, adjustSize.Height);
 
             var canvas = Graphics.FromImage(bmp);
