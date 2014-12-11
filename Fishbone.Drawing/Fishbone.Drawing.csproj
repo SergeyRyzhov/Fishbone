@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawers\IDrawer.cs" />
+    <Compile Include="Drawers\SkeletonDrawer.cs" />
+    <Compile Include="Drawers\TestsConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
