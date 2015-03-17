@@ -57,11 +57,15 @@ namespace Fishbone.Viewer
             }
 
             m_worker.DrawThumbnail(col, row, cellx, celly, pbThumbnail.Height, pbThumbnail.Width, "thumbnail");
-            using (var fs = new FileStream("thumbnail.png", FileMode.Open, FileAccess.Read))
+
+            if (File.Exists("thumbnail.png"))
             {
-                pbThumbnail.Image = Image.FromStream(fs);
-                pbThumbnail.Refresh();
-                fs.Close();
+                using (var fs = new FileStream("thumbnail.png", FileMode.Open, FileAccess.Read))
+                {
+                    pbThumbnail.Image = Image.FromStream(fs);
+                    pbThumbnail.Refresh();
+                    fs.Close();
+                }
             }
         }
 
@@ -78,7 +82,7 @@ namespace Fishbone.Viewer
         {
             if (row > 0)
             {
-                row -= celly/2;
+                row -= celly / 2;
             }
 
             if (row < 0)
@@ -93,7 +97,7 @@ namespace Fishbone.Viewer
 
             if (row < rows - celly)
             {
-                row += celly/2;
+                row += celly / 2;
             }
 
             if (row > rows - celly)
@@ -108,7 +112,7 @@ namespace Fishbone.Viewer
         {
             if (col > 0)
             {
-                col -= cellx/2;
+                col -= cellx / 2;
             }
 
             if (col < 0)
@@ -124,7 +128,7 @@ namespace Fishbone.Viewer
 
             if (col < cols - cellx)
             {
-                col += cellx/2;
+                col += cellx / 2;
             }
 
             if (col > cols - cellx)
