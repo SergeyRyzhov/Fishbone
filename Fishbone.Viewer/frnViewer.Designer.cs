@@ -73,6 +73,7 @@
             // openMatrix
             // 
             this.openMatrix.FileName = "file.mtx";
+            this.openMatrix.Filter = "MTX files|*.mtx";
             // 
             // pbMainView
             // 
@@ -122,6 +123,7 @@
             // 
             // btnSaveCurrent
             // 
+            this.btnSaveCurrent.Enabled = false;
             this.btnSaveCurrent.Location = new System.Drawing.Point(530, 472);
             this.btnSaveCurrent.Name = "btnSaveCurrent";
             this.btnSaveCurrent.Size = new System.Drawing.Size(128, 23);
@@ -132,6 +134,7 @@
             // 
             // btnSaveThumbnail
             // 
+            this.btnSaveThumbnail.Enabled = false;
             this.btnSaveThumbnail.Location = new System.Drawing.Point(530, 501);
             this.btnSaveThumbnail.Name = "btnSaveThumbnail";
             this.btnSaveThumbnail.Size = new System.Drawing.Size(128, 23);

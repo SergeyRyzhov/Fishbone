@@ -170,7 +170,6 @@ namespace Fishbone.Viewer
             }
 
             UpdateCurrent();
-            UpdateCurrent();
         }
     }
 }
