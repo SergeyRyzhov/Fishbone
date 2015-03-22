@@ -1,18 +1,15 @@
 ﻿using System;
-using log4net;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Fishbone.Common.Model;
+using log4net;
 
 namespace Fishbone.Drawing.Drawers
 {
     public class SkeletonDrawer : IDrawer<int>
     {
-        private static ILog s_logger = LogManager.GetLogger(typeof(SkeletonDrawer));
+        private static readonly ILog s_logger = LogManager.GetLogger(typeof(SkeletonDrawer));
         public virtual Size AdjustSize(IMatrix<int> mtx)
         {
 
@@ -131,11 +128,15 @@ namespace Fishbone.Drawing.Drawers
             return new Size(width, height);
         }
 
-        public virtual Graphics Draw(IMatrix<int> matrix, string fileName)
+        public virtual Bitmap Draw(IMatrix<int> matrix, string fileName, int height, int width, out float scale)
         {
-            Size adjustSize = AdjustSize(matrix);
+            Size adjustSize = AdjustSize(matrix.Cols, matrix.Rows, height, width, height, width);
 
-            float scale = 1 / GetScaling(matrix.Cols, matrix.Rows, adjustSize.Width, adjustSize.Height);
+            scale = 1 / GetScaling(matrix.Cols, matrix.Rows, adjustSize.Width, adjustSize.Height);
+
+//            Size adjustSize = AdjustSize(matrix);
+
+//            float scale = 1 / GetScaling(matrix.Cols, matrix.Rows, adjustSize.Width, adjustSize.Height);
             Console.WriteLine("Scale {0}", scale);
             Console.WriteLine("Size {0}", adjustSize);
             var bmp = new Bitmap(adjustSize.Width, adjustSize.Height);
@@ -155,8 +156,8 @@ namespace Fishbone.Drawing.Drawers
                 canvas.FillRectangle(Brushes.Gray, c * scale, r * scale, scale, scale);
                 canvas.DrawRectangle(new Pen(Color.Black), c * scale, r * scale, scale, scale);
             }
-            bmp.Save(fileName, ImageFormat.Png);
-            return canvas;
+            //bmp.Save(fileName, ImageFormat.Png);
+            return bmp;
         }
     }
 }

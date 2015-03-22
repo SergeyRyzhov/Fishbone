@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Caching;
 using Fishbone.Common.Model;
 using Fishbone.Common.Utilites;
 using Fishbone.Drawing.Drawers;
@@ -15,12 +10,12 @@ namespace Fishbone.Drawing.Extended
 {
     public class CachedDrawer : SkeletonDrawer
     {
-        private static ILog s_logger = LogManager.GetLogger(typeof(CachedDrawer));
-        private Cache m_cache;
+        private static readonly ILog s_logger = LogManager.GetLogger(typeof(CachedDrawer));
+        private readonly ICache m_cache;
 
         public CachedDrawer()
         {
-            m_cache = CacheManager.Cache;
+            m_cache = Cache.Instance;
         }
 
         public override Bitmap DrawPart(IMatrix<int> matrix, out float scale, int col, int row, int cellx, int celly, int height, int width,
@@ -37,17 +32,15 @@ namespace Fishbone.Drawing.Extended
                 float[] cscale = source.scale;
                 using (MemoryStream stream = new MemoryStream((byte[])cbitmap))
                 {
-                    using (Bitmap bmp = new Bitmap(stream))
-                    {
-                        scale = cscale[0];
-                        return bmp;
-                    }
+                    Bitmap bmp = new Bitmap(stream);
+                    scale = cscale[0];
+                    return bmp;
                 }
             }
             var bitmap = base.DrawPart(matrix, out scale, col, row, cellx, celly, height, width, fileName);
             using (MemoryStream ms = new MemoryStream())
             {
-                bitmap.Save(ms, bitmap.RawFormat);
+                bitmap.Save(ms, ImageFormat.Png);
                 dynamic cacheData = new
                 {
                     bitmap = ms.ToArray(),
@@ -60,9 +53,39 @@ namespace Fishbone.Drawing.Extended
             return bitmap;
         }
 
-        public override Graphics Draw(IMatrix<int> matrix, string fileName)
+        public override Bitmap Draw(IMatrix<int> matrix, string fileName, int height, int width, out float scale)
         {
-            return base.Draw(matrix, fileName);
+            var bitmapKey = string.Format("Draw thumbnail mtx:{0}, height:{1}, width:{2}",
+                matrix.GetHashCode(), height, width);
+            if (m_cache[bitmapKey] != null)
+            {
+                s_logger.DebugFormat("From cache, key: {0}", bitmapKey);
+                dynamic source = m_cache[bitmapKey];
+
+                byte[] cbitmap = source.bitmap;
+                float[] cscale = source.scale;
+                using (MemoryStream stream = new MemoryStream((byte[])cbitmap))
+                {
+                    Bitmap bmp = new Bitmap(stream);
+                    scale = cscale[0];
+                    return bmp;
+                }
+            }
+
+            var bitmap = base.Draw(matrix, fileName, height, width, out scale); 
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                dynamic cacheData = new
+                {
+                    bitmap = ms.ToArray(),
+                    scale = new float[1] { scale }
+                };
+                m_cache.Insert(bitmapKey, cacheData);
+                s_logger.DebugFormat("Saveed to cache, key: {0}", bitmapKey);
+            }
+
+            return bitmap;
         }
     }
 

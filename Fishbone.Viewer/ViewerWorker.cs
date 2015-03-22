@@ -36,12 +36,12 @@ namespace Fishbone.Viewer
 
         public string DrawPart(int col, int row, int cellx, int celly, int height, int width, string name)
         {
-            IDrawer<int> drawer = new SkeletonDrawer();
+            IDrawer<int> drawer = new CachedDrawer();
             var fileName = name + ".png";
             float scale;
             var timer = new Stopwatch();
             timer.Start();
-            Bitmap bmp = drawer.DrawPart(m_matrix, out scale, row, col, cellx, celly, height, width, fileName);
+            Bitmap bmp = drawer.DrawPart(m_matrix, out scale, col, row, cellx, celly, height, width, fileName);
             timer.Stop();
             s_logger.DebugFormat("Drawing was elapsed: {0}", timer.Elapsed);
 
@@ -54,25 +54,27 @@ namespace Fishbone.Viewer
 
         public string DrawThumbnail(int col, int row, int cellx, int celly, int height, int width, string name)
         {
-            IDrawer<int> drawer = new SkeletonDrawer();
+            IDrawer<int> drawer = new CachedDrawer();
             var fileName = name + ".png";
-            if (m_matrix.Cols > 2000 || m_matrix.Rows > 2000)
-            {
-                s_logger.WarnFormat("Drawing thumbnail was skipped. Matrix very big");
-                return fileName;
-            }
 
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
             float scale;
-            Bitmap bmp = drawer.DrawPart(m_matrix, out scale, 0, 0, m_matrix.Cols, m_matrix.Rows, height, width,
-                fileName);
+            Bitmap bmp = drawer.Draw(m_matrix, fileName, height, width, out scale);
             int x = Convert.ToInt32(col*scale);
             int y = Convert.ToInt32(row*scale);
             int w = Convert.ToInt32(cellx*scale);
             int h = Convert.ToInt32(celly*scale);
             var canvas = Graphics.FromImage(bmp);
-            canvas.DrawRectangle(new Pen(Color.Red), x, y, w, h);
+            var pen = new Pen(Color.Red) {Width = 2};
+            canvas.DrawRectangle(pen, x, y, w, h);
+            timer.Stop();
+            s_logger.DebugFormat("Drawing thumbnail was elapsed: {0}", timer.Elapsed);
 
+            timer.Restart();
             bmp.Save(fileName, ImageFormat.Png);
+            timer.Stop();
+            s_logger.DebugFormat("Saving thumbnail was elapsed: {0}", timer.Elapsed);
             return fileName;
         }
 

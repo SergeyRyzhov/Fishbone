@@ -26,7 +26,8 @@ namespace Fishbone.Console
             timer.Start();
             
             IDrawer<int> drawer = new SkeletonDrawer();
-            drawer.Draw(mtx, args[0] + ".png");
+            float scale;
+            drawer.Draw(mtx, args[0] + ".png",256,256, out scale);
             timer.Stop();
 
             Window.WriteLine("Drawing: {0}", timer.Elapsed);

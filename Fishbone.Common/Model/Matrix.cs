@@ -22,6 +22,11 @@ namespace Fishbone.Common.Model
 
     public class CrsPortraitMatrix : IMatrix<int>
     {
+        public override int GetHashCode()
+        {
+            return 17 * Cols + Rows;
+        }
+
         private readonly int[] m_rowIndex;
         private readonly int[] m_colIndex;
 
@@ -59,7 +64,7 @@ namespace Fishbone.Common.Model
                 }
                 catch (IndexOutOfRangeException exception)
                 {
-                    Console.WriteLine("Matrix are not symmetric");
+                    //Console.WriteLine("Matrix are not symmetric");
                     return 0;
                 }
             }

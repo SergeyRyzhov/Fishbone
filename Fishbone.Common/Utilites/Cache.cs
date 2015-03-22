@@ -1,52 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
 
 namespace Fishbone.Common.Utilites
 {
-    public class CacheManager
+    public class Cache : ICache
     {
-        private static HttpRuntime _httpRuntime;
+        private static readonly Lazy<ICache> s_instance;
+        private Dictionary<string, object> m_storage;
 
-        public static Cache Cache
+        public static ICache Instance
         {
-            get
-            {
-                EnsureHttpRuntime();
-                return HttpRuntime.Cache;
-            }
+            get { return s_instance.Value; }
         }
 
-        private static void EnsureHttpRuntime()
+        static Cache()
         {
-            if (null == _httpRuntime)
-            {
-                try
-                {
-                    Monitor.Enter(typeof(CacheManager));
-                    if (null == _httpRuntime)
-                    {
-                        // Create an Http Content to give us access to the cache.
-                        _httpRuntime = new HttpRuntime();
-                    }
-                }
-                finally
-                {
-                    Monitor.Exit(typeof(CacheManager));
-                }
-            }
+            s_instance = new Lazy<ICache>(() => (ICache)(new Cache()));
         }
-        private static Cache s_cache;
 
-        public static Cache Instance
+        private Cache()
         {
-            get { return s_cache ?? (s_cache = new Cache()); }
+            m_storage = new Dictionary<string, object>();
         }
+
+        public object this[string key]
+        {
+            get { return Get<object>(key); }
+            set { Insert(key, value); }
+        }
+
+        public void Insert<T>(string key, T value)
+        {
+            m_storage.Add(key, value);
+        }
+
+        public T Get<T>(string key)
+        {
+            return m_storage.ContainsKey(key) ? (T)m_storage[key] : default(T);
+        }
+    }
+
+    public interface ICache
+    {
+        void Insert<T>(string key, T value);
+
+        T Get<T>(string key);
+        object this[string key] { get; set; }
     }
 }
