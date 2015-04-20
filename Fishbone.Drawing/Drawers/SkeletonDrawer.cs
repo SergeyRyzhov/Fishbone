@@ -3,13 +3,21 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using Fishbone.Common.Model;
+using Fishbone.Parsing.Parsers;
 using log4net;
 
 namespace Fishbone.Drawing.Drawers
 {
     public class SkeletonDrawer : IDrawer<int>
     {
+        private readonly MatrixDecoration m_decoration;
         private static readonly ILog s_logger = LogManager.GetLogger(typeof(SkeletonDrawer));
+
+        public SkeletonDrawer(MatrixDecoration decoration)
+        {
+            m_decoration = decoration;
+        }
+
         public virtual Size AdjustSize(IMatrix<int> mtx)
         {
 
@@ -114,7 +122,8 @@ namespace Fishbone.Drawing.Drawers
                     {
                         var x = c - col;
                         var y = r - row;
-                        canvas.FillRectangle(Brushes.Gray, x * scale, y * scale, scale, scale);
+                        var color = m_decoration.GetCellColor(c, r);
+                        canvas.FillRectangle(new SolidBrush(color), x * scale, y * scale, scale, scale);
                         canvas.DrawRectangle(new Pen(Color.Black), x * scale, y * scale, scale, scale);
                     }
                 }
@@ -148,12 +157,15 @@ namespace Fishbone.Drawing.Drawers
             {
                 var c = cell.Col;
                 var r = cell.Row;
-                canvas.FillRectangle(Brushes.Gray, c * scale, r * scale, scale, scale);
+
+                var color = m_decoration.GetCellColor(c, r);
+                canvas.FillRectangle(new SolidBrush(color), c * scale, r * scale, scale, scale);
                 canvas.DrawRectangle(new Pen(Color.Black), c * scale, r * scale, scale, scale);
 
                 c = cell.Row;
                 r = cell.Col;
-                canvas.FillRectangle(Brushes.Gray, c * scale, r * scale, scale, scale);
+                color = m_decoration.GetCellColor(c, r);
+                canvas.FillRectangle(new SolidBrush(color), c * scale, r * scale, scale, scale);
                 canvas.DrawRectangle(new Pen(Color.Black), c * scale, r * scale, scale, scale);
             }
             //bmp.Save(fileName, ImageFormat.Png);

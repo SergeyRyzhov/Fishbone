@@ -29,6 +29,11 @@ namespace Fishbone.Common.Utilites
             set { Insert(key, value); }
         }
 
+        public void Clear()
+        {
+            m_storage.Clear();
+        }
+
         public void Insert<T>(string key, T value)
         {
             m_storage.Add(key, value);
@@ -46,5 +51,6 @@ namespace Fishbone.Common.Utilites
 
         T Get<T>(string key);
         object this[string key] { get; set; }
+        void Clear();
     }
 }

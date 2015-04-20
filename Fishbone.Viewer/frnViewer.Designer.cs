@@ -47,6 +47,7 @@
             this.btnDownLeft = new System.Windows.Forms.Button();
             this.btnDownRight = new System.Windows.Forms.Button();
             this.btnLoadColoring = new System.Windows.Forms.Button();
+            this.openColor = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMainView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbThumbnail)).BeginInit();
             this.SuspendLayout();
@@ -229,8 +230,11 @@
             this.btnLoadColoring.TabIndex = 15;
             this.btnLoadColoring.Text = "Laod coloring";
             this.btnLoadColoring.UseVisualStyleBackColor = true;
-            this.btnLoadColoring.Visible = false;
             this.btnLoadColoring.Click += new System.EventHandler(this.btnLoadColoring_Click);
+            // 
+            // openColor
+            // 
+            this.openColor.Filter = "Text files (*.txt)|*.txt";
             // 
             // FormViewer
             // 
@@ -285,6 +289,7 @@
         private System.Windows.Forms.Button btnDownLeft;
         private System.Windows.Forms.Button btnDownRight;
         private System.Windows.Forms.Button btnLoadColoring;
+        private System.Windows.Forms.OpenFileDialog openColor;
     }
 }
 

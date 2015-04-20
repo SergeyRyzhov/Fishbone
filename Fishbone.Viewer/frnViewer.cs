@@ -287,7 +287,13 @@ namespace Fishbone.Viewer
 
         private void btnLoadColoring_Click(object sender, EventArgs e)
         {
+            var res = openColor.ShowDialog();
+            if (res == DialogResult.OK)
+            {
+                m_worker.LoadColoring(openColor.FileName);
 
+                UpdateCurrent();
+            }
         }
 
         private void FormViewer_KeyDown(object sender, KeyEventArgs e)

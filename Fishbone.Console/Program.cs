@@ -16,18 +16,18 @@ namespace Fishbone.Console
             }
 
             Window.WriteLine("Start parsing arguments");
-            IParser<int> parser = new MtxPortraitParser();
+            IMatrixParser<int> matrixParser = new MtxPortraitMatrixParser();
             var timer = new Stopwatch();
             timer.Start();
-            var mtx = parser.Parse(args[0]);
+            var mtx = matrixParser.Parse(args[0]);
             timer.Stop();
             Window.WriteLine("Parsing: {0}", timer.Elapsed);
             timer.Reset();
             timer.Start();
-            
-            IDrawer<int> drawer = new SkeletonDrawer();
+
+            IDrawer<int> drawer = new SkeletonDrawer(new BlockMatrixDecoration(new int[0]));
             float scale;
-            drawer.Draw(mtx, args[0] + ".png",256,256, out scale);
+            drawer.Draw(mtx, args[0] + ".png", 256, 256, out scale);
             timer.Stop();
 
             Window.WriteLine("Drawing: {0}", timer.Elapsed);

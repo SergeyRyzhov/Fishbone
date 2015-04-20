@@ -47,9 +47,13 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,8 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parsers\IParser.cs" />
-    <Compile Include="Parsers\MtxPortraitParser.cs" />
+    <Compile Include="Parsers\BlockMatrixDecoration.cs" />
+    <Compile Include="Parsers\DecorationParser.cs" />
+    <Compile Include="Parsers\IDecorationParser.cs" />
+    <Compile Include="Parsers\IMatrixParser.cs" />
+    <Compile Include="Parsers\LineMatrixDecoration.cs" />
+    <Compile Include="Parsers\MatrixDecoration.cs" />
+    <Compile Include="Parsers\MtxPortraitMatrixParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

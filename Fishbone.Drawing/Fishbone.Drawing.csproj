@@ -74,6 +74,10 @@
       <Project>{a864cab2-b437-4681-b0bc-a2f5ea373446}</Project>
       <Name>Fishbone.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fishbone.Parser\Fishbone.Parsing.csproj">
+      <Project>{2E626709-B917-4E8B-9AC3-D8470CF550F0}</Project>
+      <Name>Fishbone.Parsing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

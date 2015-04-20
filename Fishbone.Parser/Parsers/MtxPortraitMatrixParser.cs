@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Fishbone.Parsing.Parsers
 {
-    public class MtxPortraitParser : IParser<int>
+    public class MtxPortraitMatrixParser : IMatrixParser<int>
     {
         public IMatrix<int> Parse(string fileName)
         {

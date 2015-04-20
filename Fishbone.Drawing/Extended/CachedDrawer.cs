@@ -4,6 +4,7 @@ using System.IO;
 using Fishbone.Common.Model;
 using Fishbone.Common.Utilites;
 using Fishbone.Drawing.Drawers;
+using Fishbone.Parsing.Parsers;
 using log4net;
 
 namespace Fishbone.Drawing.Extended
@@ -13,7 +14,7 @@ namespace Fishbone.Drawing.Extended
         private static readonly ILog s_logger = LogManager.GetLogger(typeof(CachedDrawer));
         private readonly ICache m_cache;
 
-        public CachedDrawer()
+        public CachedDrawer(MatrixDecoration matrixDecoration) : base(matrixDecoration)
         {
             m_cache = Cache.Instance;
         }
