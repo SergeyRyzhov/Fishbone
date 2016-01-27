@@ -243,7 +243,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(133, 98);
             this.label1.TabIndex = 16;
-            this.label1.Text = "For navigation you alse can use Numpad";
+            this.label1.Text = "Navigation via numpad supported";
             // 
             // FormViewer
             // 
