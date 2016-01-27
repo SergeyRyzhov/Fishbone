@@ -81,7 +81,7 @@
             // openMatrix
             // 
             this.openMatrix.FileName = "file.mtx";
-            this.openMatrix.Filter = "MTX files|*.mtx";
+            this.openMatrix.Filter = "MTX files|*.mtx|JSON files|*.json";
             // 
             // saveMatrix
             // 
@@ -228,7 +228,7 @@
             this.btnLoadColoring.Name = "btnLoadColoring";
             this.btnLoadColoring.Size = new System.Drawing.Size(128, 23);
             this.btnLoadColoring.TabIndex = 15;
-            this.btnLoadColoring.Text = "Laod coloring";
+            this.btnLoadColoring.Text = "Load coloring";
             this.btnLoadColoring.UseVisualStyleBackColor = true;
             this.btnLoadColoring.Click += new System.EventHandler(this.btnLoadColoring_Click);
             // 

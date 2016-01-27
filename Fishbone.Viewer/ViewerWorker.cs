@@ -1,21 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using log4net;
+
 using Fishbone.Common.Model;
 using Fishbone.Common.Utilites;
 using Fishbone.Drawing.Drawers;
 using Fishbone.Drawing.Extended;
 using Fishbone.Parsing.Parsers;
 
+using log4net;
+
 namespace Fishbone.Viewer
 {
     public class ViewerWorker
     {
         private static readonly ILog s_logger = LogManager.GetLogger(typeof(ViewerWorker));
-        private readonly IMatrixParser<int> m_matrixParser;
+        private readonly Dictionary<string,IMatrixParser<int>> m_matrixParser;
         private IMatrix<int> m_matrix;
         private readonly Random m_rnd = new Random();
         private CachedDrawer m_drawer;
@@ -23,7 +26,12 @@ namespace Fishbone.Viewer
 
         public ViewerWorker()
         {
-            m_matrixParser = new MtxPortraitMatrixParser();
+            m_matrixParser = new Dictionary<string, IMatrixParser<int>>()
+                                 {
+                                     { ".mtx", new MtxPortraitMatrixParser() },
+                                     { ".json", new JsonPortraitMatrixParser() }
+                                 };
+
             m_decoretionParser = new DecorationParser();
         }
 
@@ -32,7 +40,9 @@ namespace Fishbone.Viewer
             //            m_name = Path.GetFileNameWithoutExtension(filePath);
             var timer = new Stopwatch();
             timer.Start();
-            m_matrix = m_matrixParser.Parse(filePath);
+
+
+            m_matrix = m_matrixParser[Path.GetExtension(filePath)].Parse(filePath);
             timer.Stop();
             s_logger.DebugFormat("Parsing was elapsed: {0}", timer.Elapsed);
             cols = m_matrix.Cols;
