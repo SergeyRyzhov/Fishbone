@@ -224,37 +224,44 @@ namespace Fishbone.Viewer
 
         private void btnIncrese_Click(object sender, EventArgs e)
         {
-
-            if (m_cellx > 1)
-            {
-                m_cellx /= 2;
-                m_celly /= 2;
-            }
-            if (m_cellx < 1)
-            {
-                m_cellx = 1;
-                m_celly = 1;
-            }
-
+            Increase();
             UpdateCurrent();
+        }
+
+        private void Increase()
+        {
+            if (this.m_cellx > 1)
+            {
+                this.m_cellx /= 2;
+                this.m_celly /= 2;
+            }
+            if (this.m_cellx < 1)
+            {
+                this.m_cellx = 1;
+                this.m_celly = 1;
+            }
         }
 
         private void btnDecrease_Click(object sender, EventArgs e)
         {
-            if (m_cellx < m_cols)
-            {
-                m_cellx *= 2;
-
-                m_celly *= 2;
-            }
-
-            if (m_cellx > m_cols)
-            {
-                m_cellx = m_cols;
-                m_celly = m_rows;
-            }
-
+            Decrease();
             UpdateCurrent();
+        }
+
+        private void Decrease()
+        {
+            if (this.m_cellx < this.m_cols)
+            {
+                this.m_cellx *= 2;
+
+                this.m_celly *= 2;
+            }
+
+            if (this.m_cellx > this.m_cols)
+            {
+                this.m_cellx = this.m_cols;
+                this.m_celly = this.m_rows;
+            }
         }
 
         private void btnUpLeft_Click(object sender, EventArgs e)
@@ -303,12 +310,14 @@ namespace Fishbone.Viewer
             switch (e.KeyCode)
             {
                 case Keys.W:
+                case Keys.NumPad8:
                     {
                         MoveUp();
                         UpdateCurrent();
                         return;
                     }
 
+                case Keys.NumPad2:
                 case Keys.S:
                     {
                         MoveDown();
@@ -316,6 +325,7 @@ namespace Fishbone.Viewer
                         return;
                     }
 
+                case Keys.NumPad6:
                 case Keys.D:
                     {
                         MoveRight();
@@ -323,9 +333,60 @@ namespace Fishbone.Viewer
                         return;
                     }
 
+                case Keys.NumPad4:
                 case Keys.A:
                     {
                         MoveLeft();
+                        UpdateCurrent();
+                        return;
+                    }
+
+
+                case Keys.NumPad1:
+                    {
+                        MoveLeft();
+                        MoveDown();
+                        UpdateCurrent();
+                        return;
+                    }
+
+
+                case Keys.NumPad7:
+                    {
+                        MoveLeft();
+                        MoveUp();
+                        UpdateCurrent();
+                        return;
+                    }
+
+
+                case Keys.NumPad9:
+                    {
+                        MoveRight();
+                        MoveUp();
+                        UpdateCurrent();
+                        return;
+                    }
+
+
+                case Keys.NumPad3:
+                    {
+                        MoveRight();
+                        MoveDown();
+                        UpdateCurrent();
+                        return;
+                    }
+
+                case Keys.Subtract:
+                    {
+                        Decrease();
+                        UpdateCurrent();
+                        return;
+                    }
+
+                case Keys.Add:
+                    {
+                        Increase();
                         UpdateCurrent();
                         return;
                     }

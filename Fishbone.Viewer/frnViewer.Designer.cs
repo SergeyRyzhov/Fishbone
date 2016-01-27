@@ -48,6 +48,7 @@
             this.btnDownRight = new System.Windows.Forms.Button();
             this.btnLoadColoring = new System.Windows.Forms.Button();
             this.openColor = new System.Windows.Forms.OpenFileDialog();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbMainView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbThumbnail)).BeginInit();
             this.SuspendLayout();
@@ -236,11 +237,20 @@
             // 
             this.openColor.Filter = "Text files (*.txt)|*.txt";
             // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(530, 288);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(133, 98);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "For navigation you alse can use Numpad";
+            // 
             // FormViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(671, 537);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnLoadColoring);
             this.Controls.Add(this.btnDownRight);
             this.Controls.Add(this.btnDownLeft);
@@ -290,6 +300,7 @@
         private System.Windows.Forms.Button btnDownRight;
         private System.Windows.Forms.Button btnLoadColoring;
         private System.Windows.Forms.OpenFileDialog openColor;
+        private System.Windows.Forms.Label label1;
     }
 }
 

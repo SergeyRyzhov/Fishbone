@@ -12,31 +12,6 @@ using Newtonsoft.Json;
 
 namespace Fishbone.Parsing.Parsers
 {
-    public class JsonEdge
-    {
-        public int From { get; set; }
-
-        public int To { get; set; }
-
-        public override int GetHashCode()
-        {
-            return From.GetHashCode() * 17 + To.GetHashCode();
-        }
-    }
-
-    public class Comparer : IEqualityComparer<JsonEdge>
-    {
-        public bool Equals(JsonEdge x, JsonEdge y)
-        {
-            return /*x.From == y.From && x.To == y.To || */x.From == y.To && x.To == y.From;
-        }
-
-        public int GetHashCode(JsonEdge obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
-
     public class JsonPortraitMatrixParser : IMatrixParser<int>
     {
         public IMatrix<int> Parse(string fileName)
@@ -45,11 +20,6 @@ namespace Fishbone.Parsing.Parsers
             int cols = 0;
             int[] rowIndexes = null;
             int[] colIndexes = null;
-
-            int currentPosition = -1;
-            int currentRowPosition = 1;
-            int lastRow = 0;
-            int nz = 0;
 
             using (var file = new FileStream(fileName, FileMode.Open))
             {
@@ -69,15 +39,22 @@ namespace Fishbone.Parsing.Parsers
 
                     cols = rows = vertices.Length;
 
-                                                rowIndexes = new int[rows + 1];
-//          
+                    rowIndexes = new int[rows + 1];
+                    //          
 
-                    json =
-                        json.Distinct(new Comparer())
-                            .Where(e => e.From != e.To)
-                            .OrderBy(e => e.From)
-                            .ThenBy(e => e.To)
-                            .ToArray();
+                    json = json.Distinct(new Comparer()).Where(e => e.From != e.To).ToArray();
+
+                    foreach (var edge in json)
+                    {
+                        if (edge.From > edge.To)
+                        {
+                            var eFrom = edge.From;
+                            edge.From = edge.To;
+                            edge.To = eFrom;
+                        }
+                    }
+
+                    json = json.OrderBy(e => e.From).ThenBy(e => e.To).ToArray();
 
                     colIndexes = new int[json.Length];
 
@@ -92,53 +69,36 @@ namespace Fishbone.Parsing.Parsers
 
                         colIndexes[col++] = map[edge.To];
                     }
-
-                    //                    var line = sr.ReadLine();
-                    //                    var first = true;
-                    //                    while (line != null)
-                    //                    {
-                    //                        if (line.Contains("%"))
-                    //                        {
-                    //                            line = sr.ReadLine();
-                    //                            continue;
-                    //                        }
-                    //
-                    //                        var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    //                        if (first)
-                    //                        {
-                    //                            rows = int.Parse(parts[0]);
-                    //                            cols = int.Parse(parts[1]);
-                    //                            nz = int.Parse(parts[2]);
-                    //                            rowIndexes = new int[rows + 1];
-                    //                            colIndexes = new int[nz];
-                    //                            first = false;
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            var c = int.Parse(parts[0]) - 1;
-                    //                            var r = int.Parse(parts[1]) - 1;
-                    //
-                    //                            colIndexes[++currentPosition] = c;
-                    //
-                    //                            if (lastRow == r)
-                    //                            {
-                    //                            }
-                    //                            else
-                    //                            {
-                    //                                lastRow = r;
-                    //                                rowIndexes[currentRowPosition++] = currentPosition;
-                    //                            }
-                    //                        }
-                    //                        line = sr.ReadLine();
-                    //                    }
-                    //
-                    //
-                    //                    rowIndexes[currentRowPosition++] = nz;
                 }
             }
 
             var matrix = new CrsPortraitMatrix(cols, rows, rowIndexes, colIndexes);
             return matrix;
+        }
+
+        public class JsonEdge
+        {
+            public int From { get; set; }
+
+            public int To { get; set; }
+
+            public override int GetHashCode()
+            {
+                return From.GetHashCode() * 17 + To.GetHashCode();
+            }
+        }
+
+        public class Comparer : IEqualityComparer<JsonEdge>
+        {
+            public bool Equals(JsonEdge x, JsonEdge y)
+            {
+                return /*x.From == y.From && x.To == y.To || */ x.From == y.To && x.To == y.From;
+            }
+
+            public int GetHashCode(JsonEdge obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }
